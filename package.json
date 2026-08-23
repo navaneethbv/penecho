@@ -86,10 +86,10 @@
     "node": ">=20.3.0"
   },
   "dependencies": {
-    "@inquirer/prompts": "7.10.1",
+    "@inquirer/prompts": "8.6.0",
     "diff": "9.0.0",
-    "eventsource-parser": "3.1.0",
-    "sharp": "^0.34.5"
+    "eventsource-parser": "4.1.0",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "png2icons": "2.0.1"
