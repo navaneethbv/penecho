@@ -1,3 +1,10 @@
+## Dependency freshness
+
+Run `npx npm-check-updates` before starting a new task to check for newer dependency versions.
+Run it separately in the root, `tools/mobile/`, and `tools/electron/` directories, since each has its own `package.json`.
+Update what is safe, and skip a major bump if it breaks the toolchain rather than forcing it through, recording why in the PR description.
+`tools/electron/` pulls in a git-protocol transitive dependency (`@electron/node-gyp`); an environment that blocks git fetches cannot regenerate its lockfile, so treat a failed `npm install` there as an environment limitation, not a reason to abandon the update.
+
 ## graphify
 
 This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
