@@ -20,7 +20,7 @@ test("Android dependencies stay isolated from the root install", () => {
     assert.equal(rootPackage.dependencies[dependency], undefined, dependency);
     assert.equal(rootPackage.devDependencies[dependency], undefined, dependency);
     assert.equal(rootLock.packages[`node_modules/${dependency}`], undefined, dependency);
-    assert.equal(mobilePackage.dependencies[dependency], "7.4.3", dependency);
+    assert.equal(mobilePackage.dependencies[dependency], "8.5.0", dependency);
     assert.ok(mobileLock.packages[`node_modules/${dependency}`], dependency);
   }
   assert.equal(rootPackage.scripts["mobile:deps"], "npm ci --prefix tools/mobile");
