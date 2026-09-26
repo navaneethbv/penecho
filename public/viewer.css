@@ -1,0 +1,194 @@
+/* Read-only Canvas viewer mode.
+   Activated only when html has .viewer-mode (set by viewer.js when
+   PENECHO_CONFIG.viewer is true). Everything interactive is hidden or made
+   pointer-transparent; only pan/zoom stays available. */
+
+html.viewer-mode .topbar,
+html.viewer-mode footer,
+html.viewer-mode #aiEmbodiment,
+html.viewer-mode #tourLayer,
+html.viewer-mode #textInputHint,
+html.viewer-mode #objectChromeLayer,
+html.viewer-mode #animationControls,
+html.viewer-mode .cloud-toolbar,
+html.viewer-mode #changelogLayer,
+html.viewer-mode #settingsLayer,
+html.viewer-mode .canvas-navigation-lock,
+html.viewer-mode .canvas-navigation-lock-hint,
+html.viewer-mode .canvas-hint,
+html.viewer-mode #tip,
+html.viewer-mode #canvasWelcome,
+html.viewer-mode .canvas-frame::after { display: none !important; }
+
+/* Widgets and placed content never capture the pointer: every gesture pans
+   or zooms the canvas, which is exactly what a presentation viewer needs. */
+html.viewer-mode #widgetLayer iframe,
+html.viewer-mode #placedContentLayer,
+html.viewer-mode #placedContentLayer * { pointer-events: none !important; }
+
+html.viewer-mode, html.viewer-mode body { height: 100%; overflow: hidden; }
+
+.viewer-topbar {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  left: max(12px, env(safe-area-inset-left));
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  pointer-events: none;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+}
+.viewer-topbar > * { pointer-events: auto; }
+
+/* Swiss-minimal viewer controls: one quiet brand surface and discrete actions.
+   The action row is layout-only so each button paints exactly one border. */
+.viewer-brand {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 44px;
+  min-height: 36px;
+  padding: 5px 10px 5px 7px;
+  border: 1px solid #e4e4e7;
+  border-radius: 13px;
+  background: #ffffff;
+  color: #18181b;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: normal;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgb(24 24 27 / .1);
+  opacity: .5;
+  transition: opacity .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+.viewer-brand img { width: 26px; height: 26px; object-fit: contain; }
+.viewer-brand:hover { opacity: 1; border-color: #d4d4d8; background: #fafafa; box-shadow: 0 6px 20px rgb(24 24 27 / .13); }
+.viewer-brand:focus-visible { outline: 3px solid rgb(37 99 235 / .32); outline-offset: 2px; }
+.viewer-brand:focus-visible { opacity: 1; }
+
+.viewer-actions {
+  flex: 0 1 auto;
+  display: flex;
+  min-width: 0;
+  max-width: calc(100% - 124px);
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  opacity: .5;
+  transition: opacity .18s ease;
+}
+.viewer-actions:empty { display: none; }
+.viewer-actions:hover,
+.viewer-actions:focus-within { opacity: 1; }
+
+.viewer-chip,
+.viewer-primary {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  touch-action: manipulation;
+  transition: border-color .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.viewer-chip:active,
+.viewer-primary:active { transform: scale(.97); }
+.viewer-chip:focus-visible,
+.viewer-primary:focus-visible { outline: 3px solid rgb(37 99 235 / .32); outline-offset: 2px; }
+
+.viewer-action-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.viewer-chip {
+  background: transparent;
+  color: #52525b;
+}
+.viewer-chip:hover { background: #f4f4f5; color: #18181b; }
+.viewer-account-action { max-width: min(30vw, 240px); }
+
+.viewer-primary {
+  flex: none;
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgb(37 99 235 / .2);
+}
+.viewer-primary:hover { background: #1d4ed8; box-shadow: 0 4px 10px rgb(37 99 235 / .24); }
+.viewer-primary svg { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (max-width: 620px) {
+  .viewer-topbar {
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
+    left: max(8px, env(safe-area-inset-left));
+    gap: 8px;
+  }
+  .viewer-brand { width: 44px; padding: 7px; }
+  .viewer-brand span { display: none; }
+  .viewer-actions { max-width: calc(100% - 52px); gap: 2px; }
+  .viewer-chip,
+  .viewer-primary { min-height: 44px; padding-inline: 12px; }
+  .viewer-account-action { max-width: min(28vw, 136px); }
+}
+
+@media (max-width: 360px) {
+  .viewer-chip,
+  .viewer-primary { padding-inline: 10px; font-size: 13px; }
+  .viewer-account-action { max-width: 82px; }
+}
+
+@media (pointer: coarse) {
+  .viewer-brand,
+  .viewer-actions a,
+  .viewer-actions button,
+  .viewer-primary { min-height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewer-brand,
+  .viewer-chip,
+  .viewer-primary { transition: none; }
+  .viewer-status .spinner { animation-duration: 1.8s; }
+}
+
+.viewer-status {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: grid;
+  place-items: center;
+  /* Catalog: page-status / fullscreen-status. Keep foreground and surface
+     in the same semantic palette; Canvas ink/accent may belong to light paper. */
+  background: var(--pe-surface, #ffffff);
+  color: var(--pe-ink, #20242c);
+  font: 400 13px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC", "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  text-align: center;
+  padding: 24px;
+}
+.viewer-status[hidden] { display: none; }
+.viewer-status img { max-width: min(920px, 92vw); max-height: 62vh; border-radius: 12px; box-shadow: 0 18px 60px rgba(0, 0, 0, .5); }
+.viewer-status .spinner { width: 22px; height: 22px; margin: 0 auto 12px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: viewer-spin 1s linear infinite; }
+@keyframes viewer-spin { to { transform: rotate(360deg); } }

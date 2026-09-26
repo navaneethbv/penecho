@@ -8,6 +8,7 @@ const ROOT = __dirname;
 const ICON = path.join(ROOT, "build", "icons", "penecho");
 const DESKTOP_TOOLS = path.join(ROOT, "tools", "electron");
 const ELECTRON_VERSION = desktopTools.devDependencies.electron;
+const DESKTOP_VERSION = pkg.config.desktopVersion;
 const desktopModule = name => {
   try {
     return require.resolve(name, { paths:[DESKTOP_TOOLS] });
@@ -18,10 +19,25 @@ const desktopModule = name => {
     throw error;
   }
 };
-const hasAppleNotarization = Boolean(
-  process.env.MAC_CODESIGN_IDENTITY && process.env.APPLE_ID && process.env.APPLE_APP_SPECIFIC_PASSWORD && process.env.APPLE_TEAM_ID,
-), hasWindowsCertificate = Boolean(process.env.WINDOWS_CERTIFICATE_FILE && process.env.WINDOWS_CERTIFICATE_PASSWORD),
+const appleApiNotarization = process.env.APPLE_API_KEY_PATH && process.env.APPLE_API_KEY_ID && process.env.APPLE_API_ISSUER ? {
+  appleApiKey:process.env.APPLE_API_KEY_PATH,
+  appleApiKeyId:process.env.APPLE_API_KEY_ID,
+  appleApiIssuer:process.env.APPLE_API_ISSUER,
+} : null, appleIdNotarization = process.env.APPLE_ID && process.env.APPLE_APP_SPECIFIC_PASSWORD && process.env.APPLE_TEAM_ID ? {
+  appleId:process.env.APPLE_ID,
+  appleIdPassword:process.env.APPLE_APP_SPECIFIC_PASSWORD,
+  teamId:process.env.APPLE_TEAM_ID,
+} : null, appleNotarization = process.env.MAC_CODESIGN_IDENTITY && (appleApiNotarization || appleIdNotarization),
+  hasWindowsCertificate = Boolean(process.env.WINDOWS_CERTIFICATE_FILE && process.env.WINDOWS_CERTIFICATE_PASSWORD),
   macEntitlements = path.join(ROOT, "build", "entitlements.mac.plist");
+const windowsSigning = hasWindowsCertificate ? {
+  certificateFile:process.env.WINDOWS_CERTIFICATE_FILE,
+  certificatePassword:process.env.WINDOWS_CERTIFICATE_PASSWORD,
+  timestampServer:process.env.WINDOWS_TIMESTAMP_SERVER || "http://timestamp.digicert.com",
+  hashes:["sha256"],
+  description:"PenEcho",
+  website:"https://github.com/penecho/penecho",
+} : null;
 const macSigning = process.env.MAC_CODESIGN_IDENTITY ? {
   identity:process.env.MAC_CODESIGN_IDENTITY,
   optionsForFile:() => ({
@@ -46,8 +62,10 @@ module.exports = {
   packagerConfig: {
     name:"PenEcho",
     executableName:"PenEcho",
+    appVersion:DESKTOP_VERSION,
+    buildVersion:DESKTOP_VERSION,
     icon:ICON,
-    asar:{ unpack:"**/node_modules/{sharp,@img}/**/*" },
+    asar:{ unpack:"**/node_modules/{sharp,@img,@vscode}/**/*" },
     prune:true,
     appBundleId:"app.penecho.desktop",
     appCategoryType:"public.app-category.productivity",
@@ -58,31 +76,31 @@ module.exports = {
       NSHumanReadableCopyright:`Copyright © ${new Date().getFullYear()} PenEcho contributors`,
     },
     osxSign:macSigning,
-    ...(hasAppleNotarization ? {
-      osxNotarize:{
-        tool:"notarytool",
-        appleId:process.env.APPLE_ID,
-        appleIdPassword:process.env.APPLE_APP_SPECIFIC_PASSWORD,
-        teamId:process.env.APPLE_TEAM_ID,
-      },
+    ...(appleNotarization ? {
+      osxNotarize:appleNotarization,
     } : {}),
-    ...(hasWindowsCertificate ? {
-      windowsSign:{
-        signToolOptions:{
-          certificateFile:process.env.WINDOWS_CERTIFICATE_FILE,
-          certificatePassword:process.env.WINDOWS_CERTIFICATE_PASSWORD,
-        },
-      },
+    ...(windowsSigning ? {
+      windowsSign:windowsSigning,
     } : {}),
     ignore:[
-      /^\/\.git(?:\/|$)/,
-      /^\/\.github(?:\/|$)/,
+      /^\/\./,
+      /^\/build\/(?!icons(?:\/|$)).+/,
+      /^\/build\/icons\/(?!penecho\.png$).+/,
+      /^\/docs\/(?!(?:mcp-setup\.md|mcp-agent-instructions\.md)$).+/,
+      /^\/fixtures(?:\/|$)/,
+      /^\/logs(?:\/|$)/,
+      /^\/output(?:\/|$)/,
+      /^\/scripts(?:\/|$)/,
+      /^\/spec(?:\/|$)/,
+      /^\/test(?:\/|$)/,
+      /^\/testcase(?:\/|$)/,
       /^\/tools(?:\/|$)/,
       /^\/out(?:\/|$)/,
       /^\/release(?:\/|$)/,
       /^\/coverage(?:\/|$)/,
       /^\/test-results(?:\/|$)/,
       /^\/playwright-report(?:\/|$)/,
+      /^\/forge\.config\.js$/,
       /^\/public\/plugins\/private(?:\/|$)/,
     ],
   },
@@ -90,6 +108,7 @@ module.exports = {
   hooks:{
     readPackageJson:(_forgeConfig, packageJson) => ({
       ...packageJson,
+      version:DESKTOP_VERSION,
       devDependencies:{ ...packageJson.devDependencies, electron:ELECTRON_VERSION },
     }),
   },
@@ -98,7 +117,7 @@ module.exports = {
       name:desktopModule("@electron-forge/maker-dmg"),
       platforms:["darwin"],
       config:{
-        name:`PenEcho-${pkg.version}`,
+        name:`PenEcho-${DESKTOP_VERSION}`,
         title:"PenEcho",
         icon:`${ICON}.icns`,
         overwrite:true,
@@ -117,13 +136,15 @@ module.exports = {
         authors:"PenEcho contributors",
         description:pkg.description,
         exe:"PenEcho.exe",
-        setupExe:`PenEcho-Setup-${pkg.version}-win-x64.exe`,
+        setupExe:`PenEcho-Setup-${DESKTOP_VERSION}-win-x64.exe`,
         setupIcon:`${ICON}.ico`,
+        loadingGif:path.join(ROOT, "build", "icons", "penecho-install.gif"),
         // Avoid invoking rcedit through Wine during cross-platform builds.
         // The installed app and Setup.exe still use the PenEcho icon.
         skipUpdateIcon:true,
-        iconUrl:`https://github.com/penecho/penecho/releases/download/v${pkg.version}/penecho.ico`,
+        iconUrl:`https://github.com/penecho/penecho/releases/download/v${DESKTOP_VERSION}/penecho.ico`,
         noMsi:true,
+        ...(windowsSigning ? { windowsSign:windowsSigning } : {}),
       },
     },
   ],

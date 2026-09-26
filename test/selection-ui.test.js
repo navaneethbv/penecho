@@ -39,6 +39,8 @@ test("selection overlay only intercepts its compact toolbar controls", () => {
   assert.match(css, /\.selection-overlay-layer\[hidden\]\s*\{\s*display:\s*none/);
   assert.match(css, /\.selection-context-toolbar\s*\{[^}]*position:\s*absolute;[^}]*max-width:\s*min\(580px,\s*calc\(100% - 16px\)\)[^}]*pointer-events:\s*auto/);
   assert.match(css, /transform:\s*translate3d\(var\(--selection-toolbar-x,\s*8px\),\s*var\(--selection-toolbar-y,\s*8px\),\s*0\)/);
+  assert.match(css, /\.selection-scope-notice\s*\{[^}]*display:\s*flex;[^}]*align-items:\s*center;[^}]*gap:\s*5px/);
+  assert.match(css, /\.selection-scope-notice::before\s*\{[^}]*flex:\s*0\s+0\s+15px/);
   assert.match(css, /\.selection-toolbar-actions\s*\{[^}]*display:\s*inline-flex/);
   assert.match(css, /@media \(max-width:\s*620px\)[\s\S]*?\.selection-context-toolbar\s*\{[^}]*flex-wrap:\s*wrap/);
   assert.match(css, /@media \(pointer:\s*coarse\)[\s\S]*?\.selection-toolbar-button\s*\{[^}]*min-height:\s*36px/);

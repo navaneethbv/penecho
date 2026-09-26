@@ -1,5 +1,8 @@
 <h1 align="center">
-  <img src="../../public/penecho-readme-header.png" alt="PenEcho" width="760">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../../public/penecho-readme-header-dark.webp">
+    <img src="../../public/penecho-readme-header.webp" alt="PenEcho" width="280">
+  </picture>
 </h1>
 
 <p align="center">
@@ -14,47 +17,162 @@
   <a href="README.de.md">Deutsch</a>
 </p>
 
-<p align="center"><strong>Думайте вместе с ИИ за пределами окна чата.</strong></p>
-
-<p align="center">PenEcho - это общий холст, где рукописный текст, формулы, схемы и пространственный контекст становятся частью диалога.</p>
-
+<h1 align="center">Пространство для работы<br>и размышлений с ИИ.</h1>
+<p align="center">Рисуйте, исследуйте и создавайте со встроенным Agent или своим ИИ-ассистентом с поддержкой MCP.</p>
 <p align="center">
-  <a href="https://discord.gg/3jrPJ3mXdX"><img src="https://img.shields.io/badge/Discord-Присоединиться-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white" alt="Присоединиться к Discord PenEcho"></a>
-  <a href="https://github.com/penecho/penecho/stargazers"><img src="https://img.shields.io/github/stars/penecho/penecho?style=for-the-badge&amp;logo=github&amp;logoColor=white&amp;color=f5b301" alt="Поставить звезду PenEcho на GitHub"></a>
-  <a href="../../LICENSE"><img src="https://img.shields.io/badge/License-AGPL%20v3-blue?style=for-the-badge" alt="Лицензия: AGPL v3"></a>
+  <img src="https://img.shields.io/badge/version-1.3.3-087f83" alt="Версия 1.3.3">
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue" alt="AGPL-3.0-only"></a>
+</p>
+<p align="center">
+  <a href="https://penecho.ai">Сайт</a> ·
+  <a href="https://github.com/penecho/penecho/releases/latest">Скачать</a> ·
+  <a href="#quick-start">Быстрый старт</a> ·
+  <a href="../mcp-setup.md">Руководство MCP</a> ·
+  <a href="https://discord.gg/3jrPJ3mXdX">Discord</a>
 </p>
 
-> Этот перевод содержит обзор проекта. Актуальным и полным источником технической информации остается [README на английском языке](../../README.md).
+<p align="center">
+  <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_full_demo.webp" alt="Полная демонстрация PenEcho" width="49%">
+  <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_plugins.webp" alt="Демонстрация профессиональных диаграмм PenEcho" width="49%">
+</p>
 
-<p align="center"><img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_plugins.webp" alt="Демонстрация профессиональных диаграмм PenEcho" width="49%"> <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_full_demo.webp" alt="Полная демонстрация PenEcho" width="49%"></p>
+<p align="center">
+  <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_plugins_sub_x10.webp" alt="Демонстрация плагинов PenEcho" width="49%">
+  <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/play_patris.webp" alt="Демонстрация интерактивного холста PenEcho" width="49%">
+</p>
 
-<p align="center"><img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_plugins_sub_x10.webp" alt="Демонстрация плагинов PenEcho" width="49%"> <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/play_patris.webp" alt="Демонстрация интерактивного холста PenEcho" width="49%"></p>
+<p align="center">
+  <a href="https://www.kimi.com/code?aff=penecho">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../assets/kimi-open-source-friends-dark.svg">
+      <img src="../assets/kimi-open-source-friends-light.svg" alt="Kimi Open Source Friends" width="326" height="56">
+    </picture>
+  </a>
+</p>
 
-## Kimi Open Source Friends
+## Пространственное продолжение разговора с ИИ
 
-PenEcho является официальным участником программы **Kimi Open Source Friends**, в рамках которой [Moonshot AI](https://www.kimi.com/) поддерживает заметные проекты с открытым исходным кодом. Команда Kimi предоставляет проекту API-кредиты, а Kimi K3 входит в число рекомендуемых моделей для сложной работы с рукописным текстом и схемами.
+Продолжайте общаться с **Codex, Claude, Kimi или другими ИИ-агентами**. PenEcho даст вашим результатам место для работы.
 
-- [Kimi Code](https://www.kimi.com/code?aff=penecho) - подписка для программирования, доступная по всему миру
-- [Kimi Open Platform, Китай](https://platform.kimi.com?aff=penecho) - API для материкового Китая
-- [Kimi Open Platform, весь мир](https://platform.kimi.ai?aff=penecho) - API для остальных регионов
+Через MCP ваш ИИ может превращать объяснения в схемы, а идеи — в интерактивные прототипы. Держите материалы, рассуждения и результаты рядом, добавляйте пометки на холст и передавайте обратную связь в следующий раунд обсуждения.
+
+| Продолжайте разговор | Наблюдайте за результатом | Передавайте обратную связь |
+| --- | --- | --- |
+| Работайте с привычным ИИ-агентом. | MCP-сервер PenEcho размещает схемы, документы и интерактивные прототипы на Canvas. | Пробуйте результат, добавляйте пометки, и агент прочитает их для следующей доработки. |
+
+<p align="center">
+  <a href="../assets/mcp-spatial-example.webp">
+    <img src="../assets/mcp-spatial-example.webp" alt="Обсуждение архитектуры с ИИ: рукописные комментарии рядом с предложенным решением на PenEcho Canvas" width="760">
+  </a>
+</p>
+<p align="center"><em>Обсуждение архитектуры с рукописными пометками на Canvas.</em></p>
+
+<!-- professional-diagram-gallery -->
+<p align="center">Создавайте <strong>профессиональные диаграммы</strong>, которые удобно изучать и с которыми легко взаимодействовать.</p>
+
+<table width="100%">
+  <tr>
+    <th colspan="2" align="left">Архитектура</th>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/kubernetes.webp"><img src="../assets/professional-diagrams/previews/kubernetes.webp" alt="Кластер Kubernetes в продакшене" width="100%"></a>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/migration.webp"><img src="../assets/professional-diagrams/previews/migration.webp" alt="Миграция к микросервисам" width="100%"></a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Кластер Kubernetes в продакшене</strong></td>
+    <td valign="top"><strong>Миграция к микросервисам</strong></td>
+  </tr>
+  <tr>
+    <th colspan="2" align="left">Диаграммы последовательностей</th>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/notifications.webp"><img src="../assets/professional-diagrams/previews/notifications.webp" alt="Событийные уведомления" width="100%"></a>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/mcp-request.webp"><img src="../assets/professional-diagrams/previews/mcp-request.webp" alt="Как запросы MCP достигают Canvas" width="100%"></a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Событийные уведомления</strong></td>
+    <td valign="top"><strong>Как запросы MCP достигают Canvas</strong></td>
+  </tr>
+  <tr>
+    <th colspan="2" align="left">Рабочие процессы</th>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/release.webp"><img src="../assets/professional-diagrams/previews/release.webp" alt="Подготовка релиза: параллельные задачи" width="100%"></a>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/rollout.webp"><img src="../assets/professional-diagrams/previews/rollout.webp" alt="Развёртывание и откат в нескольких регионах" width="100%"></a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Подготовка релиза: параллельные задачи</strong></td>
+    <td valign="top"><strong>Развёртывание и откат в нескольких регионах</strong></td>
+  </tr>
+</table>
+
+<p align="center"><sub>Нажмите на изображение, чтобы открыть диаграмму в полном размере.</sub></p>
+<!-- /professional-diagram-gallery -->
+
+**Смотрите на результат ещё до завершения.** Наблюдайте, как он складывается в ходе разговора с ИИ. Пробуйте, оставляйте обратную связь и вместе продвигайте проект.
+
+[Подключить агента через MCP →](#connect-your-agent-with-mcp)
+
+## Возможности
+
+- **Работайте визуально.** Объединяйте рукописные записи, формулы, текст, изображения, схемы и интерактивные HTML Widgets на просторном холсте.
+- **Создавайте с ИИ.** Используйте встроенный Agent для исследований, работы с файлами, объяснения идей и создания редактируемых визуальных результатов.
+- **Подключайте своего агента.** Codex, Claude Code и другие MCP-совместимые клиенты могут читать и редактировать Canvas, для которого вы явно разрешили доступ.
+- **Сохраняйте и делитесь.** Объединяйте Canvas в проекты, сохраняйте версии в Cloud, синхронизируйте избранное и публикуйте через Echoes.
+
+## Новое в 1.3.3
+
+| Тип диаграммы | Что можно нарисовать |
+| --- | --- |
+| **Архитектурные диаграммы** | Показывайте сервисы, зависимости и вложенные границы систем с автоматической компоновкой и прокладкой связей. |
+| **Диаграммы последовательностей** | Отображайте участников и порядок сообщений, включая ответы, вызовы самого себя, условные, циклические и параллельные фрагменты. |
+| **Рабочие процессы** | Описывайте шаги, решения, ветви с условиями, циклы и параллельные пути с точками разделения и объединения. |
+
+Опишите требования PenEcho Agent или агенту, подключённому через MCP. Изучайте детали на Canvas, уточняйте результат обратной связью и экспортируйте в SVG или PNG.
+
+[Полный журнал изменений](../../CHANGELOG.md#133)
+
+## Как это работает
+
+<p align="center">
+  <img src="../../public/penecho-architecture.webp" alt="Архитектура PenEcho: браузер подключается к PenEcho Cloud или локальному ПК. Cloud предоставляет размещённые модели и подключение к привязанному устройству. На ПК работают PenEcho CLI или приложение с вашим LLM API или агентами. Внешние ИИ-агенты могут использовать Cloud MCP или Local MCP; оба подключения необязательны." width="1483">
+</p>
+
+Откройте PenEcho в браузере через PenEcho Cloud или локальный ПК с CLI либо настольным приложением. Cloud предоставляет размещённые модели и может подключаться к привязанному устройству; на ПК можно использовать собственный API моделей или агентов. Внешние ИИ-агенты, например Codex и Claude, подключаются через Cloud MCP или Local MCP. Оба подключения MCP необязательны.
+
+Подробности реализации — в [описании архитектуры](../architecture.md).
+
+<a id="quick-start"></a>
 
 ## Быстрый старт
 
-### Настольное приложение
+**Настольное приложение:** скачайте версию для Windows или macOS в [GitHub Releases](https://github.com/penecho/penecho/releases/latest).
 
-[Скачать с GitHub Releases](https://github.com/penecho/penecho/releases/latest).
-
-Для установки через npm потребуется [Node.js 20.3 или новее](https://nodejs.org/), а также ключ API, авторизованный [Codex CLI](https://developers.openai.com/codex/cli) или авторизованный [Claude Code CLI](https://code.claude.com/docs/en/overview).
+**npm:** требуется Node.js **22.19 или новее**.
 
 ```bash
 npm install -g penecho
-penecho configure
 penecho
 ```
 
-Откройте [http://localhost:3888](http://localhost:3888). Команда `penecho configure` позволяет интерактивно выбрать источник LLM, модель, уровень рассуждения, тайм-аут, формат изображения и сетевой адрес. По умолчанию настройки сохраняются в `~/.penecho/config.env`; учетные данные API не передаются в браузер.
+Откройте `http://localhost:3888`. Добавьте собственный API моделей или авторизованный Codex, Claude Code либо Kimi CLI в **Настройки → Подключения**. Подключения сохраняются в `~/.penecho/connections.json`, общие настройки — в `~/.penecho/config.env`. Для моделей, размещённых PenEcho, войдите в аккаунт и выберите доступную модель в настройках.
 
-Запуск из исходного кода:
+При запуске задайте шестизначный код доступа или явно разрешите открытый доступ в доверенной сети. При запуске также выводятся LAN-адреса для других устройств.
+
+<details>
+<summary>Запуск из исходного кода</summary>
 
 ```bash
 git clone https://github.com/penecho/penecho.git
@@ -63,59 +181,80 @@ npm install
 npm start
 ```
 
-## Думайте на холсте
+</details>
 
-Напишите вопрос, формулу, нарисуйте схему или набросок идеи в любом месте холста и сделайте паузу. PenEcho распознает штрихи и пространственные связи, а затем размещает ответ рядом.
+<a id="connect-your-agent-with-mcp"></a>
 
-- Рисуйте пером или мышью и перемещайтесь по холсту размером `20 000 x 20 000`.
-- Получайте ответы, подсказки, объяснения, формулы, графики и схемы прямо на холсте.
-- Перемещайте и масштабируйте черновики ИИ, затем подтверждайте или отклоняйте их независимо от исходного содержимого.
-- Выделяйте рукописные элементы лассо, чтобы перемещать, масштабировать, перекрашивать, удалять или набирать их через Typeset.
-- Сохраняйте снимки на этом устройстве или сервере PenEcho и экспортируйте подтвержденное содержимое в PNG.
-- Выбирайте темы Arcane, Sci-fi, Research или Studio.
+## Подключение агента через MCP
 
-## Что нового в 0.9.0
+Для **Local MCP**:
 
-- **Несколько подключений ИИ с переключением одним нажатием.** Сохраните до десяти подключений API или CLI, используйте редактируемые шаблоны Kimi и MiniMax, проверяйте их на холсте и выбирайте отдельное активное подключение на каждом клиенте одного хоста PenEcho. Изменения применяются сразу.
-- **Общие холсты, организованные по проектам.** Распределяйте серверные холсты по проектам, перемещайте работу между ними и просматривайте увеличенные эскизы по времени последнего изменения. Версионированный пакет v2 хранит вместе тайлы, виджеты, размещённые изображения, ресурсы и данные предпросмотра; холсты v1 по-прежнему открываются и обновляются при следующем сохранении.
-- **Управляемый Refine прямо в выбранном виджете.** Напишите или разместите новые указания в любом месте видимой области, затем выберите виджет, к которому их нужно применить. PenEcho наглядно связывает область указаний с целью и запрашивает подтверждение; отмена или ошибка сохраняет указания, а успешное изменение можно подтвердить или откатить.
-- **Небольшие инкрементальные изменения через стандартный unified diff.** Refine отправляет полные редактируемые файлы виджета, но модель возвращает только изменённые блоки, не создавая весь виджет заново. Это заметно сокращает выходные токены и ожидание, сохраняя атомарность изменений HTML, исходника и метаданных виджета.
-- **Настоящая потоковая передача API.** Совместимые с OpenAI и Anthropic API теперь используют SSE от начала до конца, немедленно показывая получение данных и повышая стабильность длинных запросов через совместимые шлюзы.
-- **Понятный прогресс и отмена.** Верхняя строка показывает подготовку, подключение, ожидание, получение, проверку, повторы и тайм-аут. Во время запроса магическая кнопка немедленно останавливает активную работу.
+1. Запустите PenEcho и разрешите доступ к текущему Canvas в **Настройки → Сервис MCP**.
+2. Настройте поддерживаемый локальный клиент в настройках или скопируйте созданную конфигурацию запуска. При глобальной установке через npm клиенты, принимающие JSON `mcpServers`, могут использовать:
 
-## Основные возможности предыдущих версий
+   ```json
+   {
+     "mcpServers": {
+       "penecho": { "command": "penecho", "args": ["mcp"] }
+     }
+   }
+   ```
 
-- **0.8.1.** Добавлены актуальные публичные данные для General HTML и SVG по умолчанию для анимации и сложной графики.
-- **0.8.0 и 0.7.2.** Добавлены редактируемые профессиональные диаграммы, серверное хранение, работа с буфером обмена, веб-фотографии с источниками и более надёжные редактирование и экспорт.
+3. Попросите агента: **«Покажи обсуждённую архитектуру на моём PenEcho Canvas».**
 
-## Предыдущие выпуски
+Агент может делать снимки нужного содержимого, редактировать объекты, создавать визуальные результаты, вносить изменения в исходные файлы документов и получать обратную связь. Обнаруживаются только разрешённые и подключённые Canvas. При Local MCP клиент работает на хосте PenEcho; поддержка LAN-браузеров и браузеров через привязанное устройство не открывает локальную конечную точку MCP для публичного доступа. Cloud MCP — отдельное аутентифицированное HTTPS-подключение к вашим разрешённым холстам PenEcho Cloud.
 
-- **0.7.1.** Добавлены локальные изображения и фотографии, редактирование объектов инструментом Hand, снимки, экспорт PNG, копируемые Mermaid-диаграммы и веб-изображения с источниками.
-- **0.7.0.** Появились изолированный интерактивный HTML, плагины актуальных данных, локальное создание плагинов и сохранение виджетов.
-- **0.6.0 и ранее.** Добавлены декларативные анимации, улучшения Markdown/LaTeX, инструменты выделения и основа большого разреженного холста.
+Для настольной версии используйте сгенерированную конфигурацию с корректной встроенной средой выполнения. См. [настройку MCP](../mcp-setup.md) и необязательный [навык рабочего процесса агента](../../skills/penecho-mcp/SKILL.md).
 
-## Как это работает
+## PenEcho Cloud и подключения ИИ
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="../assets/how-it-works-dark.svg"><img alt="Как работает PenEcho" src="../assets/how-it-works-light.svg"></picture></p>
+[PenEcho Cloud](https://penecho.ai) добавляет закрытые проекты с историей версий, синхронизацию избранного, публичный доступ через Echoes и удалённый доступ к привязанному компьютеру.
 
-Браузер отправляет только относящийся к задаче фрагмент холста и геометрию. Сервер проверяет запрос, передает его выбранному исполнителю и возвращает структурированный перемещаемый черновик. Текущие рекомендации по моделям и примеры стоимости приведены в [английском README](../../README.md#recommended-model-configurations).
+| Подключение | Как работает |
+| --- | --- |
+| **Модели PenEcho** | Войдите в аккаунт, выберите доступную размещённую модель и используйте кредиты аккаунта. Текущие тарифы и баланс показаны в настройках. |
+| **Ваш API моделей** | Настройте совместимую с OpenAI или Anthropic конечную точку, модель и API-ключ. Учёт использования ведёт ваш провайдер. |
+| **Ваш CLI** | Используйте локально установленный и авторизованный Codex, Claude Code или Kimi CLI. Доступность и лимиты зависят от тарифа провайдера. |
 
-## Безопасное развертывание
+Для размещённых моделей на вашем компьютере нужен вход в Cloud, но не привязка устройства и не отдельный ключ Credits API. Cloud MCP может напрямую обращаться к разрешённым Cloud-холстам. Доступ через Cloud к Canvas, размещённому на вашем компьютере, требует, чтобы привязанное устройство было онлайн и поддерживалась необходимая ретрансляция.
 
-- **Codex CLI и Claude CLI:** используйте только на локальном компьютере или в доверенной локальной сети. Корректный запрос запускает локальный процесс CLI, поэтому не публикуйте эти режимы напрямую в интернете.
-- **Режим API:** при публичном доступе размещайте PenEcho за HTTPS-прокси с аутентификацией, ограничением частоты и размера запросов.
-- Не публикуйте файлы конфигурации, ключи API, трассировки запросов, журналы и приватные изображения холста.
+Собственные API- и CLI-подключения не расходуют кредиты PenEcho. Для локальной работы со своим подключением аккаунт Cloud необязателен. Функциям ИИ нужен доступ к выбранному провайдеру: локальный запуск PenEcho не делает удалённую модель доступной без интернета.
 
-## Участие в разработке
+## Рекомендуемые настройки моделей
 
-Перед отправкой изменений выполните:
+Рекомендации основаны на текущих практических проверках и учитывают качество ответов и задержку при реальной работе с холстом PenEcho. Фактическое время ответа зависит от провайдера, сложности холста и особенностей рассуждения.
 
-```bash
-npm run check
-```
+| Модель | Уровень рассуждения | Примечания | Рекомендуемое применение |
+| --- | --- | --- | --- |
+| Claude Opus 4.8 / 5.0 (`claude-opus-4-8` / `claude-opus-5-0`) | `medium` | Высокое качество при хорошем балансе задержки | Повседневная работа с холстом |
+| Claude Opus 4.8 / 5.0 (`claude-opus-4-8` / `claude-opus-5-0`) | `high` | Более качественное рассуждение, более долгое и менее предсказуемое ожидание | Сложные рукописные записи, математика, схемы и компоновка |
+| Fable 5 (`claude-fable-5` или `fable`) | `medium` | Часто отвечает примерно вдвое быстрее, чем `gpt-5.6-sol` с `xhigh` | Быстрая и качественная универсальная работа |
+| [Kimi K3](https://platform.kimi.ai?aff=penecho) (`kimi-k3`) | `medium` | Очень хорошее качество; `medium` сохраняет практичный баланс | Рекомендуемый вариант Kimi по умолчанию |
+| `gpt-5.6-terra` | `low` — `high` | Неожиданно высокое качество и хорошая отзывчивость | Гибкие требования к качеству и задержке |
+| `gpt-5.6-luna` | `xhigh` | Очень хорошие результаты на холсте при высокой скорости | Приоритет качества с сохранением отзывчивости |
+| `gpt-5.6-sol` | `high` | Достаточно для большинства запросов, быстрее `xhigh` | По умолчанию, когда важна отзывчивость |
+| `gpt-5.6-sol` | `xhigh` | Очень хорошее качество, но медленнее и менее предсказуемо | Сложные задачи на холсте |
+| `deepseek-v4-flash-vision-exp` | `medium` | Хорошо | Задачи с визуальным вводом через DeepSeek API |
+| `glm-5.3-flash` | `medium` | Хорошо | Быстрая работа через Anthropic-совместимый API GLM |
 
-Устройство проекта описано в [документе об архитектуре](../architecture.md), а правила участия - в [CONTRIBUTING.md](../../CONTRIBUTING.md). Вопросы и примеры можно обсуждать в [Discord](https://discord.gg/3jrPJ3mXdX) и [GitHub Discussions](https://github.com/penecho/penecho/discussions), а воспроизводимые ошибки следует оформлять в [GitHub Issues](https://github.com/penecho/penecho/issues).
+## Сообщество и лицензия
 
-## Лицензия и коммерческое использование
+Для участия прочитайте [CONTRIBUTING.md](../../CONTRIBUTING.md) и выполните `npm run check` перед открытием pull request. Сообщайте об ошибках в [Issues](https://github.com/penecho/penecho/issues), обсуждайте идеи в [Discussions](https://github.com/penecho/penecho/discussions) или присоединяйтесь к [Discord](https://discord.gg/3jrPJ3mXdX).
 
-PenEcho распространяется на условиях [GNU AGPL v3.0 only](../../LICENSE). Коммерческое использование разрешено. Если измененная версия доступна пользователям по сети, необходимо предоставить им соответствующий исходный код на условиях AGPL. Для проприетарных продуктов и размещаемых сервисов, которые не могут соблюдать AGPL, доступна отдельная [коммерческая лицензия](../../COMMERCIAL-LICENSE.md). Название и логотип регулируются [политикой товарных знаков](../../TRADEMARKS.md).
+Лицензия — [AGPL-3.0-only](../../LICENSE). Доступна альтернативная [коммерческая лицензия](../../COMMERCIAL-LICENSE.md). См. [политику товарных знаков](../../TRADEMARKS.md) и [соглашение с участниками](../../CONTRIBUTOR-LICENSE-AGREEMENT.md).
+
+## Благодарности
+
+Благодарим tt-a1i за проект [Archify](https://github.com/tt-a1i/archify). Средства отрисовки профессиональных диаграмм PenEcho используют адаптированные вспомогательные функции SVG и геометрии из этого проекта под лицензией MIT. [Лицензия MIT и уведомления об авторских правах](../../src/architecture/vendor/archify/LICENSE) сохранены; сведения о сторонних компонентах приведены в [NOTICE](../../NOTICE).
+
+## История звёзд
+
+<p align="center">
+  <a href="https://www.star-history.com/?repos=penecho%2Fpenecho&amp;type=date&amp;legend=top-left">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=penecho/penecho&amp;type=date&amp;theme=dark&amp;legend=top-left">
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=penecho/penecho&amp;type=date&amp;legend=top-left">
+      <img src="https://api.star-history.com/chart?repos=penecho/penecho&amp;type=date&amp;legend=top-left" alt="График роста числа звёзд PenEcho на GitHub" width="800">
+    </picture>
+  </a>
+</p>

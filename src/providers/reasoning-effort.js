@@ -28,44 +28,23 @@ function mapKimiReasoningEffort(effort) {
   return { none:"low", low:"low", medium:"high", high:"high", xhigh:"max", max:"max" }[effort];
 }
 
-function mapCodexReasoningEffort(effort, model = "") {
-  if (effort === "none") return "low";
-  if (effort !== "max") return effort;
-  return /^gpt-5\.6(?:$|[-.])/i.test(String(model || "").trim()) ? "max" : "xhigh";
+function isGlm53Model(model) {
+  return /^glm-5\.3(?:$|-)/i.test(String(model || "").trim().split("/").pop());
 }
 
-function mapOpenAiReasoningEffort(effort, model = "") {
-  if (effort !== "max") return effort;
-  return /^gpt-5\.6(?:$|[-.])/i.test(String(model || "").trim()) ? "max" : "xhigh";
-}
-
-function anthropicModelProfile(model = "") {
-  const id = String(model || "").trim().toLowerCase();
-  if (!id || !id.startsWith("claude-")) return { supportsEffort:true, adaptiveThinking:true, maximum:"max", supportsXhigh:true };
-  if (/^claude-opus-4-5(?:$|[-.])/.test(id)) return { supportsEffort:true, adaptiveThinking:false, maximum:"high", supportsXhigh:false };
-  if (/^claude-(?:opus|sonnet)-4-6(?:$|[-.])/.test(id)) return { supportsEffort:true, adaptiveThinking:true, maximum:"max", supportsXhigh:false };
-  if (/^claude-opus-4-[78](?:$|[-.])/.test(id) || /^claude-(?:opus|sonnet|fable|mythos)-5(?:$|[-.])/.test(id) || /^claude-mythos-preview(?:$|[-.])/.test(id)) {
-    return { supportsEffort:true, adaptiveThinking:true, maximum:"max", supportsXhigh:true };
-  }
-  return { supportsEffort:false, adaptiveThinking:false, maximum:null, supportsXhigh:false };
-}
-
-function mapAnthropicReasoningEffort(effort, model = "") {
-  const profile = anthropicModelProfile(model);
-  if (!profile.supportsEffort) return null;
-  if (profile.maximum === "high" && new Set(["xhigh", "max"]).has(effort)) return "high";
-  if (effort === "xhigh" && !profile.supportsXhigh) return "max";
-  return effort;
-}
-
-function mapClaudeCliReasoningEffort(effort, model = "") {
-  if (effort === "none") return "low";
-  return mapAnthropicReasoningEffort(effort, model);
+function mapGlm53ReasoningEffort(effort) {
+  // GLM-5.3 / Flash force thinking and accept only low, high, max.
+  // Unsupported common levels otherwise silently select maximum reasoning.
+  return { off:"low", none:"low", minimal:"low", low:"low", medium:"high", high:"high", xhigh:"max", max:"max" }[String(effort || "").trim().toLowerCase()] || effort;
 }
 
 function reasoningEffortMapping({ provider = "api", apiFormat = "openai", apiPreset = "", apiUrl = "", model = "", effort } = {}) {
-  const raw = String(effort || "").trim().toLowerCase(), requested = raw || DEFAULT_REASONING_EFFORT,
+  const raw = String(effort || "").trim(), requested = raw || DEFAULT_REASONING_EFFORT,
     family = provider === "api" ? apiFamily({ apiPreset, apiUrl }) : provider.replace(/-cli$/, "");
+  if (provider === "api" && isGlm53Model(model)) {
+    const anthropic = String(apiFormat).trim().toLowerCase() === "anthropic";
+    return { requested, family:"glm", mode:anthropic ? "output_config.effort" : "reasoning_effort", value:mapGlm53ReasoningEffort(requested), canDisable:false, ...(anthropic ? { adaptiveThinking:true } : {}) };
+  }
   if (family === "kimi") {
     if (provider !== "api") return { requested, family, mode:"reasoning_effort", value:mapKimiReasoningEffort(requested) || requested, canDisable:false };
     const id = String(model || "").trim().toLowerCase();
@@ -74,30 +53,21 @@ function reasoningEffortMapping({ provider = "api", apiFormat = "openai", apiPre
     if (/^kimi-k2\.[56](?:$|[-.])/.test(id)) return { requested, family, mode:"thinking", value:requested === "none" ? "disabled" : "enabled", canDisable:true };
     return { requested, family, mode:"native-default", value:null, canDisable:false };
   }
-  if (family === "minimax") {
-    const canDisable = /^minimax-m3(?:$|[-.])/i.test(String(model || "").trim());
-    return { requested, family, mode:"thinking", value:requested === "none" && canDisable ? "disabled" : "adaptive", canDisable };
-  }
-  if (provider === "codex-cli") return { requested, family:"codex", mode:"effort", value:mapCodexReasoningEffort(requested, model), canDisable:false };
-  if (provider === "claude-cli") return { requested, family:"claude", mode:"effort", value:mapClaudeCliReasoningEffort(requested, model), canDisable:true };
+  if (provider !== "api") return { requested, family, mode:"effort", value:requested, canDisable:requested === "none" };
   if (String(apiFormat || "").trim().toLowerCase() === "anthropic") {
-    const profile = anthropicModelProfile(model);
     if (requested === "none") return { requested, family:"anthropic", mode:"thinking", value:"disabled", canDisable:true };
-    if (!profile.supportsEffort) return { requested, family:"anthropic", mode:"native-default", value:null, canDisable:true };
-    return { requested, family:"anthropic", mode:"output_config.effort", value:mapAnthropicReasoningEffort(requested, model), canDisable:true, adaptiveThinking:profile.adaptiveThinking };
+    return { requested, family:family === "generic" ? "anthropic" : family, mode:"output_config.effort", value:requested, canDisable:true, adaptiveThinking:true };
   }
-  return { requested, family:"openai", mode:"reasoning_effort", value:mapOpenAiReasoningEffort(requested, model), canDisable:requested === "none" };
+  return { requested, family:family === "generic" ? "openai" : family, mode:"reasoning_effort", value:requested, canDisable:requested === "none" };
 }
 
 function apiReasoningParameters(options = {}) {
   const mapping = reasoningEffortMapping({ ...options, provider:"api" });
   if (mapping.family === "kimi" && mapping.mode === "thinking") return { thinking:{ type:mapping.value } };
   if (mapping.family === "kimi" && mapping.mode === "native-default") return {};
-  if (mapping.family === "minimax") return { thinking:{ type:mapping.value } };
-  if (mapping.family === "anthropic") {
-    if (mapping.requested === "none") return { thinking:{ type:"disabled" } };
-    if (mapping.mode === "native-default") return {};
-    return { ...(mapping.adaptiveThinking ? { thinking:{ type:"adaptive" } } : {}), output_config:{ effort:mapping.value } };
+  if (String(options.apiFormat || "").trim().toLowerCase() === "anthropic") {
+    if (mapping.requested === "none" && mapping.canDisable) return { thinking:{ type:"disabled" } };
+    return { thinking:{ type:"adaptive" }, output_config:{ effort:mapping.value } };
   }
   return { reasoning_effort:mapping.value };
 }
@@ -105,14 +75,11 @@ function apiReasoningParameters(options = {}) {
 module.exports = {
   DEFAULT_REASONING_EFFORT,
   PENECHO_REASONING_EFFORTS,
-  anthropicModelProfile,
   apiFamily,
   apiReasoningParameters,
-  mapAnthropicReasoningEffort,
-  mapCodexReasoningEffort,
-  mapClaudeCliReasoningEffort,
   mapKimiReasoningEffort,
-  mapOpenAiReasoningEffort,
+  isGlm53Model,
+  mapGlm53ReasoningEffort,
   normalizeReasoningEffort,
   reasoningEffortTimeoutMultiplier,
   reasoningEffortMapping,
