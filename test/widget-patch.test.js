@@ -2,7 +2,7 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { commandFromWidgetPatch, resolveWidgetEditPatchCommands, widgetPatchFileContent, widgetPatchContract, widgetPatchFiles } = require("../src/server/widget-patch.js");
+const { commandFromWidgetPatch, resolveWidgetEditPatchCommands, widgetSourceHash, widgetPatchFileContent, widgetPatchContract, widgetPatchFiles } = require("../src/server/widget-patch.js");
 
 const HTML = "<!doctype html>\n<html>\n<body>\n<h1>Old</h1>\n<p>Keep</p>\n<footer>v1</footer>\n</body>\n</html>\n";
 const SOURCE = "graph LR\nA --> B\nB --> C\n";
@@ -63,6 +63,57 @@ test("widget patch applies multiple exact hunks and preserves host identity and 
   assert.match(result.html, /<h1>New<\/h1>/);
   assert.match(result.html, /<footer>v2<\/footer>/);
   assert.equal(result.copyText, SOURCE);
+});
+
+test("widget source fingerprint excludes live geometry and non-source diagnostics",()=>{
+  const baseline=htmlEdit(), sourceHash=widgetSourceHash(baseline);
+  assert.equal(widgetSourceHash(htmlEdit({
+    box:{x:900,y:800,w:300,h:200},
+    instructionMode:"explicit",
+    diagnostics:{status:"changed"},
+    contentVersion:42,
+  })),sourceHash);
+  assert.notEqual(widgetSourceHash(htmlEdit({title:"Changed source title"})),sourceHash);
+  assert.notEqual(widgetSourceHash(htmlEdit({html:HTML.replace("Old","New")})),sourceHash);
+});
+
+test("widget patch opt-in diagnostics report exact landing ranges and bounded after windows",()=>{
+  const diagnostics={includeAppliedRanges:true}, patch=[
+    "--- a/widget.html",
+    "+++ b/widget.html",
+    "@@ -99,1 +99,1 @@",
+    "-<h1>Old</h1>",
+    "+<h1>New</h1>",
+    "",
+  ].join("\n"), result=commandFromWidgetPatch(patchCommand(patch),htmlEdit(),diagnostics);
+  assert.match(result.html,/<h1>New<\/h1>/);
+  assert.deepEqual(diagnostics.changedResources,["widget.html"]);
+  assert.deepEqual(diagnostics.appliedRanges,[{path:"widget.html",oldStart:4,oldLines:1,newStart:4,newLines:1}]);
+  assert.equal(diagnostics.afterWindows.length,1);
+  assert.deepEqual(diagnostics.afterWindows[0].lineRange,{start:2,end:6,total:9,truncated:false});
+  assert.match(diagnostics.afterWindows[0].content,/^     2\t<html>/m);
+  assert.match(diagnostics.afterWindows[0].content,/^     4\t<h1>New<\/h1>/m);
+  assert.ok(diagnostics.afterWindows[0].content.length<=24000);
+});
+
+test("widget patch after windows stop before an oversized source line and report the last complete line",()=>{
+  const oldLine=`target-${"o".repeat(32)}`, newLine=`target-${"n".repeat(24000)}`,
+    diagnostics={includeAppliedRanges:true}, patch=[
+      "--- a/widget.html",
+      "+++ b/widget.html",
+      "@@ -1,3 +1,3 @@",
+      " before",
+      `-${oldLine}`,
+      `+${newLine}`,
+      " after",
+      "",
+    ].join("\n"), result=commandFromWidgetPatch(patchCommand(patch),htmlEdit({html:`before\n${oldLine}\nafter\n`,source:"",sourceFormat:""}),diagnostics),
+    window=diagnostics.afterWindows[0];
+  assert.equal(result.html,`before\n${newLine}\nafter\n`);
+  assert.deepEqual(window.lineRange,{start:1,end:1,total:4,truncated:true});
+  assert.equal(window.content,"     1\tbefore");
+  assert.equal(window.content.includes(newLine),false,"an oversized source line must never be sliced into a partial after window");
+  assert.ok(window.content.length<=24000);
 });
 
 test("widget patch removes only exact repeated context between adjacent hunks", () => {
@@ -175,6 +226,29 @@ test("widget patch reports unsupported manifest fields precisely", () => {
     ].join("\n"), diagnostics = {};
   assert.equal(commandFromWidgetPatch(patchCommand(patch),htmlEdit(),diagnostics),null);
   assert.equal(diagnostics.reason,"unsupported-manifest-field:background");
+});
+
+test("widget patch never exposes or accepts community lineage fields", () => {
+  const fields = ["communityOriginItemId", "communityRootItemId", "communityOriginName", "communityOriginGeneration"],
+    manifest = widgetPatchFiles(htmlEdit(Object.fromEntries(fields.map(field => [field, `private-${field}`]))))
+      .find(file => file.path === "widget.json").content;
+  for (const field of fields) assert.doesNotMatch(manifest, new RegExp(field));
+
+  const patch = [
+      "--- a/widget.json",
+      "+++ b/widget.json",
+      "@@ -5,6 +5,7 @@",
+      "   \"refreshSeconds\": 900,",
+      "   \"diagramKind\": null,",
+      "   \"sourceFormat\": \"mermaid\",",
+      "+  \"communityOriginItemId\": \"123e4567-e89b-42d3-a456-426614174099\",",
+      "   \"frameworkVersion\": null,",
+      "   \"htmlFile\": \"widget.html\",",
+      "   \"copyTextFile\": \"widget.source\",",
+      "",
+    ].join("\n"), diagnostics = {};
+  assert.equal(commandFromWidgetPatch(patchCommand(patch), htmlEdit(), diagnostics), null);
+  assert.equal(diagnostics.reason, "unsupported-manifest-field:communityOriginItemId");
 });
 
 test("widget patch accepts the standard dual-file prompt example", () => {
@@ -572,6 +646,10 @@ test("widget patch accepts standard zero-line insertion coordinates", () => {
   const appendPatch = "--- a/widget.html\n+++ b/widget.html\n@@ -1,0 +2 @@\n+<script>append()</script>\n",
     appendResult = commandFromWidgetPatch(patchCommand(appendPatch), htmlEdit({ html:"<!doctype html><main>Existing</main>", source:"", sourceFormat:"" }));
   assert.equal(appendResult.html, "<!doctype html><main>Existing</main>\n<script>append()</script>");
+
+  const middlePatch = "--- a/widget.html\n+++ b/widget.html\n@@ -1,0 +2 @@\n+<script>middle()</script>\n",
+    middleSource = htmlEdit({ html:"first\nsecond\nthird", source:"", sourceFormat:"" });
+  assert.equal(commandFromWidgetPatch(patchCommand(middlePatch), middleSource), null);
 });
 
 test("widget patch rejects location drift even when jsdiff could find matching text elsewhere", () => {
@@ -582,6 +660,67 @@ test("widget patch rejects location drift even when jsdiff could find matching t
   });
   const patch = "--- a/widget.html\n+++ b/widget.html\n@@ -4,3 +4,3 @@\n repeat\n-old\n+new\n end\n";
   assert.equal(commandFromWidgetPatch(patchCommand(patch), widgetEdit), null);
+});
+
+test("widget patch diagnoses shortened long-line context and incomplete HTML tags", () => {
+  const widgetEdit = htmlEdit({
+      html:[
+        "<section>",
+        "  <canvas id=\"c\" width=\"1100\" height=\"560\"></canvas>",
+        "  <div class=\"legend\"><span>Re(ψ)</span><span>|ψ|²</span></div>",
+        "  </ol>",
+        "  <canvas id=\"w\" width=\"1100\" height=\"430\"></canvas>",
+        "  <div class=\"chips\">",
+        "</section>",
+        "",
+      ].join("\n"),
+      source:"",
+      sourceFormat:"",
+    }),
+    shortenedLongLine = [
+      "--- a/widget.html",
+      "+++ b/widget.html",
+      "@@ -1,3 +1,3 @@",
+      " <section>",
+      "-  <canvas id=\"c\" width=\"1100\" height=\"560\"></canvas>",
+      "+  <canvas id=\"c\" width=\"1100\" height=\"480\"></canvas>",
+      "   <div class=\"legend\">",
+      "",
+    ].join("\n"),
+    unchangedMainCanvasDiagnostics = {},
+    shortenedDiagnostics = {includeLocationDetails:true};
+  assert.equal(commandFromWidgetPatch(patchCommand(shortenedLongLine),widgetEdit,unchangedMainCanvasDiagnostics),null);
+  assert.deepEqual(unchangedMainCanvasDiagnostics,{});
+  assert.equal(commandFromWidgetPatch(patchCommand(shortenedLongLine),widgetEdit,shortenedDiagnostics),null);
+  assert.deepEqual(shortenedDiagnostics,{
+    includeLocationDetails:true,
+    reason:"context-mismatch",
+    path:"widget.html",
+    hunk:1,
+    oldStart:1,
+    sourceLine:3,
+    submittedLine:'  <div class="legend">',
+    currentLine:'  <div class="legend"><span>Re(ψ)</span><span>|ψ|²</span></div>',
+  });
+
+  const incompleteTag = [
+      "--- a/widget.html",
+      "+++ b/widget.html",
+      "@@ -4,3 +4,3 @@",
+      "   </ol>",
+      "-  <canvas id=\"w\" width=\"1100\" height=\"430\">",
+      "+  <canvas id=\"w\" width=\"1100\" height=\"360\">",
+      "   <div class=\"chips\">",
+      "",
+    ].join("\n"),
+    tagDiagnostics = {includeLocationDetails:true};
+  assert.equal(commandFromWidgetPatch(patchCommand(incompleteTag),widgetEdit,tagDiagnostics),null);
+  assert.equal(tagDiagnostics.reason,"context-mismatch");
+  assert.equal(tagDiagnostics.path,"widget.html");
+  assert.equal(tagDiagnostics.hunk,1);
+  assert.equal(tagDiagnostics.sourceLine,5);
+  assert.equal(tagDiagnostics.submittedLine,'  <canvas id="w" width="1100" height="430">');
+  assert.equal(tagDiagnostics.currentLine,'  <canvas id="w" width="1100" height="430"></canvas>');
 });
 
 test("widget patch strips non-diff boundary lines but rejects unsafe envelopes and full replacements", () => {
@@ -598,6 +737,29 @@ test("widget patch strips non-diff boundary lines but rejects unsafe envelopes a
   assert.deepEqual(resolveWidgetEditPatchCommands([{ tool:"html_widget", html:"replacement" }], htmlEdit()), []);
   assert.deepEqual(resolveWidgetEditPatchCommands([patchCommand(`--- a/widget.html\n+++ b/widget.html\n${validHunk}`), patchCommand(`--- a/widget.html\n+++ b/widget.html\n${validHunk}`)], htmlEdit()), []);
   assert.equal(commandFromWidgetPatch({ tool:"widget_patch", patch:`--- a/widget.html\n+++ b/widget.html\n${validHunk}`, title:"model metadata" }, htmlEdit()), null);
+});
+
+test("widget patch diagnoses bare file headers with the exact canonical headers", () => {
+  const diagnostics={includeLocationDetails:true}, patch=[
+    "--- widget.html",
+    "+++ widget.html",
+    "@@ -3,3 +3,3 @@",
+    " <body>",
+    "-<h1>Old</h1>",
+    "+<h1>New</h1>",
+    " <p>Keep</p>",
+    "",
+  ].join("\n");
+  assert.equal(commandFromWidgetPatch(patchCommand(patch),htmlEdit(),diagnostics),null);
+  assert.deepEqual(diagnostics,{
+    includeLocationDetails:true,
+    reason:"invalid-file-header-prefix",
+    path:"widget.html",
+    submittedOldHeader:"--- widget.html",
+    submittedNewHeader:"+++ widget.html",
+    expectedOldHeader:"--- a/widget.html",
+    expectedNewHeader:"+++ b/widget.html",
+  });
 });
 
 test("widget patch accepts non-diff tool boundary lines", () => {

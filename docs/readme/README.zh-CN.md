@@ -1,5 +1,8 @@
 <h1 align="center">
-  <img src="../../public/penecho-readme-header.png" alt="PenEcho" width="760">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="../../public/penecho-readme-header-dark.webp">
+    <img src="../../public/penecho-readme-header.webp" alt="PenEcho" width="280">
+  </picture>
 </h1>
 
 <p align="center">
@@ -14,47 +17,160 @@
   <a href="README.de.md">Deutsch</a>
 </p>
 
-<p align="center"><strong>跳出聊天框，与 AI 一起思考。</strong></p>
-
-<p align="center">PenEcho 是一块共享画布，让手写内容、公式、图表和空间关系都成为对话的一部分。</p>
-
+<h1 align="center">与 AI 一起思考的<br>空间工作台。</h1>
+<p align="center">手写、探索、创作，让内置 Agent 或你自己的 MCP 助手加入同一块画布。</p>
 <p align="center">
-  <a href="https://discord.gg/3jrPJ3mXdX"><img src="https://img.shields.io/badge/Discord-加入社区-5865F2?style=for-the-badge&amp;logo=discord&amp;logoColor=white" alt="加入 PenEcho Discord"></a>
-  <a href="https://github.com/penecho/penecho/stargazers"><img src="https://img.shields.io/github/stars/penecho/penecho?style=for-the-badge&amp;logo=github&amp;logoColor=white&amp;color=f5b301" alt="在 GitHub 上为 PenEcho 点亮 Star"></a>
-  <a href="../../LICENSE"><img src="https://img.shields.io/badge/License-AGPL%20v3-blue?style=for-the-badge" alt="许可证：AGPL v3"></a>
+  <img src="https://img.shields.io/badge/version-1.3.3-087f83" alt="版本 1.3.3">
+  <a href="../../LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-blue" alt="AGPL-3.0-only"></a>
+</p>
+<p align="center">
+  <a href="https://penecho.ai">官网</a> ·
+  <a href="https://github.com/penecho/penecho/releases/latest">下载</a> ·
+  <a href="#快速开始">快速开始</a> ·
+  <a href="../mcp-setup.md">MCP 指南</a> ·
+  <a href="https://discord.gg/3jrPJ3mXdX">Discord</a>
 </p>
 
-> 本译文提供项目概览。最新、最完整的技术信息以[英文 README](../../README.md) 为准。
+<p align="center">
+  <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_full_demo.webp" alt="PenEcho 完整演示" width="49%">
+  <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_plugins.webp" alt="PenEcho 专业图表演示" width="49%">
+</p>
 
-<p align="center"><img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_plugins.webp" alt="PenEcho 专业图示演示" width="49%"> <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_full_demo.webp" alt="PenEcho 完整演示" width="49%"></p>
+<p align="center">
+  <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_plugins_sub_x10.webp" alt="PenEcho 插件演示" width="49%">
+  <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/play_patris.webp" alt="PenEcho 交互画布演示" width="49%">
+</p>
 
-<p align="center"><img src="https://github.com/penecho/penecho/releases/download/v0.1.0/penecho_plugins_sub_x10.webp" alt="PenEcho 插件演示" width="49%"> <img src="https://github.com/penecho/penecho/releases/download/v0.1.0/play_patris.webp" alt="PenEcho 交互画布演示" width="49%"></p>
+<p align="center">
+  <a href="https://www.kimi.com/code?aff=penecho">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="../assets/kimi-open-source-friends-dark.svg">
+      <img src="../assets/kimi-open-source-friends-light.svg" alt="Kimi Open Source Friends" width="326" height="56">
+    </picture>
+  </a>
+</p>
 
-## Kimi 开源伙伴
+## 让 AI 对话在空间中展开
 
-PenEcho 是 **Kimi Open Source Friends** 的正式成员。该计划由 [Moonshot AI](https://www.kimi.com/) 发起，用于支持优秀的开源项目。Kimi 团队通过 API 额度支持 PenEcho 的开发；Kimi K3 也是处理手写内容、图表等复杂画布任务时的推荐模型之一。
+继续使用你熟悉的 **Codex、Claude、Kimi 或其他 AI Agent**，让 PenEcho 为对话中的成果提供一个工作空间。
 
-- [Kimi Code](https://www.kimi.com/code?aff=penecho) - 面向全球用户的编程订阅服务
-- [Kimi 开放平台（中国）](https://platform.kimi.com?aff=penecho) - 中国大陆 API 服务
-- [Kimi 开放平台（全球）](https://platform.kimi.ai?aff=penecho) - 其他地区 API 服务
+通过 MCP，让 AI 把解释变成图解，把方案变成可操作的预览。资料、推理和作品并排展开；你在画布上的圈画、批注与反馈，可以被 AI 客户端读取，接着推进下一轮修改。
+
+| 继续熟悉的对话 | 看见成果逐步成形 | 让反馈回到对话 |
+| --- | --- | --- |
+| 使用你已有的 AI Agent 讨论问题、推进任务。 | 通过 PenEcho MCP 服务，把图解、文档和交互预览放到画布上。 | 试用结果、圈画批注，让 Agent 读取反馈并继续修改。 |
+
+<p align="center">
+  <a href="../assets/mcp-spatial-example.webp">
+    <img src="../assets/mcp-spatial-example.webp" alt="与 AI 讨论架构，在 PenEcho 画布上并排查看方案并用手写标注提出反馈" width="760">
+  </a>
+</p>
+<p align="center"><em>在画布上讨论架构，并用手写标注提出反馈。</em></p>
+
+<!-- professional-diagram-gallery -->
+<p align="center">支持各种<strong>专业图表</strong>的绘制，方便查看和交互。</p>
+
+<table width="100%">
+  <tr>
+    <th colspan="2" align="left">架构图</th>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/kubernetes.webp"><img src="../assets/professional-diagrams/previews/kubernetes.webp" alt="Kubernetes 生产集群拓扑" width="100%"></a>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/migration.webp"><img src="../assets/professional-diagrams/previews/migration.webp" alt="单体到微服务迁移架构" width="100%"></a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>Kubernetes 生产集群拓扑</strong></td>
+    <td valign="top"><strong>单体到微服务迁移架构</strong></td>
+  </tr>
+  <tr>
+    <th colspan="2" align="left">时序图</th>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/notifications.webp"><img src="../assets/professional-diagrams/previews/notifications.webp" alt="事件驱动通知" width="100%"></a>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/mcp-request.webp"><img src="../assets/professional-diagrams/previews/mcp-request.webp" alt="MCP 请求如何到达画布" width="100%"></a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>事件驱动通知</strong></td>
+    <td valign="top"><strong>MCP 请求如何到达画布</strong></td>
+  </tr>
+  <tr>
+    <th colspan="2" align="left">工作流</th>
+  </tr>
+  <tr>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/release.webp"><img src="../assets/professional-diagrams/previews/release.webp" alt="发布准备：并行与汇合" width="100%"></a>
+    </td>
+    <td width="50%" align="center" valign="middle">
+      <a href="../assets/professional-diagrams/rollout.webp"><img src="../assets/professional-diagrams/previews/rollout.webp" alt="多区域发布与回滚" width="100%"></a>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top"><strong>发布准备：并行与汇合</strong></td>
+    <td valign="top"><strong>多区域发布与回滚</strong></td>
+  </tr>
+</table>
+
+<p align="center"><sub>点击图片查看完整大图。</sub></p>
+<!-- /professional-diagram-gallery -->
+
+**在完成之前，先看到它的样子。** 在与 AI 的交互中，看见项目逐步成形。先试一试，再给出反馈，一起把项目向前推进。
+
+[通过 MCP 接入你的 Agent →](#通过-mcp-接入你的-agent)
+
+## 你可以做什么
+
+- **用画布思考。** 在同一空间组合手写内容、公式、文字、图片、图表和交互式 HTML Widget。
+- **与 AI 创作。** 让内置 Agent 结合文件、网络研究和画布上下文，分析问题并生成可编辑的可视化结果。
+- **接入自己的 Agent。** 通过 MCP，让 Codex、Claude Code 或其他兼容客户端读写你明确开放的 Canvas。
+- **保存与分享。** 用项目组织画布，保存云端版本、同步收藏，通过 Echoes 发布作品。
+
+## 1.3.3 新内容
+
+| 图表类型 | 支持的画法 |
+| --- | --- |
+| **架构图** | 绘制服务、依赖关系与多层系统边界，自动布局并规划连线路径。 |
+| **时序图** | 展示参与者与消息先后，支持返回、自调用，以及条件、循环和并行片段。 |
+| **工作流** | 组织步骤、判断、带条件的分支与循环，通过分叉和汇合表达并行流程。 |
+
+向 PenEcho Agent 或通过 MCP 接入的 Agent 描述需求，即可在画布中查看图表细节、反馈修改，并导出 SVG / PNG。
+
+[完整更新记录](../../CHANGELOG.md#133)
+
+## 工作原理
+
+<p align="center">
+  <img src="../../public/penecho-architecture.webp" alt="PenEcho 架构：浏览器连接 PenEcho Cloud 或本机；Cloud 提供云端模型并连接关联设备，本机运行 PenEcho CLI 或 App，使用自有 LLM API 或 Agent。外部 AI Agent 可通过 Cloud MCP 或 Local MCP 连接，两条 MCP 连接均为可选。" width="1483">
+</p>
+
+通过浏览器访问 PenEcho Cloud，或访问本机运行的 PenEcho CLI / 桌面应用。Cloud 提供云端模型，并可连接你的关联设备；本机可以使用自有模型 API 或 Agent。Codex、Claude 等外部 AI Agent 可通过 Cloud MCP 或 Local MCP 连接，两条 MCP 连接均为可选。
+
+实现细节见[架构文档](../architecture.md)。
 
 ## 快速开始
 
-### 桌面应用
+**桌面应用：** 从 [GitHub Releases](https://github.com/penecho/penecho/releases/latest) 下载 Windows 或 macOS 版本。
 
-[前往 GitHub Releases 下载](https://github.com/penecho/penecho/releases/latest)。
-
-通过 npm 安装时，你需要 [Node.js 20.3 或更高版本](https://nodejs.org/)，并准备以下任意一种方式：API Key、已登录的 [Codex CLI](https://developers.openai.com/codex/cli)，或已登录的 [Claude Code CLI](https://code.claude.com/docs/en/overview)。
+**npm：** 需要 Node.js **22.19 或更新版本**。
 
 ```bash
 npm install -g penecho
-penecho configure
 penecho
 ```
 
-在浏览器中打开 [http://localhost:3888](http://localhost:3888)。通过 `penecho configure` 可以交互式设置 LLM 来源、模型、推理等级、超时时间、图片格式和监听地址。配置默认保存在 `~/.penecho/config.env`，API 凭据不会发送到浏览器。
+打开 `http://localhost:3888`。在**设置 → 连接**中添加自己的模型 API，或已安装并登录的 Codex、Claude Code、Kimi CLI。连接保存在 `~/.penecho/connections.json`，通用设置保存在 `~/.penecho/config.env`。使用 PenEcho 托管模型时，登录账号并在设置中选择可用模型。
 
-从源码运行：
+启动时设置六位访问码，或明确选择在可信网络开放访问。终端也会显示供其他设备使用的局域网地址。
+
+<details>
+<summary>从源码运行</summary>
 
 ```bash
 git clone https://github.com/penecho/penecho.git
@@ -63,60 +179,78 @@ npm install
 npm start
 ```
 
-## 在画布上思考
+</details>
 
-在画布任意位置写下问题、公式、图表或尚未成形的想法，然后稍作停顿。PenEcho 会理解笔迹及其空间关系，并把回答直接放在相关内容旁边。
+## 通过 MCP 接入你的 Agent
 
-- 使用手写笔或鼠标自然书写，在 `20,000 x 20,000` 的大画布上平移和缩放。
-- 直接在画布上获得答案、提示、解释、公式、函数图像和图表。
-- 移动或缩放 AI 草稿，并在它们成为正式内容前逐项接受或丢弃。
-- 用套索选择笔迹，进行移动、缩放、改色、删除，或通过 Typeset 将内容规范排版。
-- 将快照保存到当前设备或 PenEcho 服务器，并将确认后的画布内容导出为 PNG。
-- 可选择 Arcane、Sci-fi、Research 或 Studio 主题。
+使用 **Local MCP**：
 
-## 0.9.0 新功能
+1. 启动 PenEcho，在 **设置 → MCP 服务** 中开放当前 Canvas。
+2. 在设置中配置受支持的本机客户端，或复制生成的启动配置。全局 npm 安装可在接受 `mcpServers` JSON 的客户端中使用：
 
-- **多套 AI 连接，一键切换。** 最多保存十套 API 或 CLI 连接，可使用可编辑的 Kimi、MiniMax 国内/海外及 Coding Plan 预设，在画布中直接测试。连接同一 PenEcho 主机的每个客户端都能独立选择当前连接，API 和 CLI 修改立即生效。
-- **按项目管理共享画布。** 可在服务器上新建项目、移动画布，并通过更大的缩略图和最后修改时间浏览最近工作。v2 Bundle 会将笔迹分块、控件、放置图片、资源与预览元数据保存在一个可扩展的版本化文件中；旧版 v1 画布仍可打开，并会在再次保存时自动升级。
-- **有明确目标的原地 AI 完善。** 可在当前视区任意位置书写或放置新指示，再选择要更新的控件。PenEcho 会清晰连接指示区域与目标并请求确认；取消或失败不会丢失指示，成功后仍可确认或撤销结果。
-- **基于标准 unified diff 的增量修改。** 完善时会发送控件完整的可编辑文件，但模型只返回发生变化的代码片段，无需重新生成整个控件。这样可大幅减少输出 token 和等待时间，同时保证 HTML、源码及控件元数据等多文件修改原子生效。
-- **真正的 API 流式请求。** OpenAI 与 Anthropic 兼容 API 使用端到端 SSE，接收数据后立即反馈，减少网关缓冲导致的长时间等待，提高长请求的稳定性和响应速度。
-- **清晰的进度和停止操作。** 页面顶部会显示准备、连接、等待、接收、检查、重试和超时提示，且不会引起画布抖动。请求期间魔法按钮会变成停止按钮，可立即取消当前任务并保留未发送的完善指示。
+   ```json
+   {
+     "mcpServers": {
+       "penecho": { "command": "penecho", "args": ["mcp"] }
+     }
+   }
+   ```
 
-## 此前的重要更新
+3. 告诉 Agent：**“把刚才讨论的架构展示到我的 PenEcho 画布上。”**
 
-- **0.8.1。** 通用 HTML 控件支持实时公开数据，动画与复杂图形优先使用 SVG。
-- **0.8.0 与 0.7.2。** 新增可编辑专业图示、服务器画布存储、剪贴板工作流、带来源的网络照片，以及更可靠的编辑、保存与导出。
+Agent 可以查看相关内容、编辑对象、创建可视化结果、修改文档源文件，并接收你的反馈。只有已开放且连接中的 Canvas 才会被发现。使用 Local MCP 时，MCP 客户端运行在 PenEcho 主机上；支持局域网和关联设备浏览器不会将本地 MCP 接口公开到互联网。Cloud MCP 则通过独立的、经过身份验证的 HTTPS 连接访问已启用的 PenEcho Cloud 画布。
 
-## 历史版本
+桌面应用请使用设置生成的配置，其中包含正确的内置运行时。详见 [MCP 配置指南](../mcp-setup.md)和可选的 [Agent 工作流 skill](../../skills/penecho-mcp/SKILL.md)。
 
-- **0.7.1。** 新增本地图片与照片、Hand 对象编辑、快照和 PNG 导出、可复制 Mermaid 流程图及带来源的网络图片。
-- **0.7.0。** 引入隔离的交互式 HTML、实时数据插件、本地插件创建和 Widget 持久化。
-- **0.6.0 及更早。** 新增声明式动画、Markdown/LaTeX 改进、选择工具与稀疏大画布基础。
+## PenEcho Cloud 与 AI 连接
 
-## 工作原理
+[PenEcho Cloud](https://penecho.ai) 提供私有项目与版本保存、收藏同步、Echoes 公开分享，以及关联电脑的远程访问。
 
-<p align="center"><picture><source media="(prefers-color-scheme: dark)" srcset="../assets/how-it-works-dark.svg"><img alt="PenEcho 工作原理" src="../assets/how-it-works-light.svg"></picture></p>
+| 连接方式 | 使用方法 |
+| --- | --- |
+| **PenEcho 模型** | 登录账号，选择可用托管模型并使用积分；设置中展示当前费率和余额。 |
+| **自己的模型 API** | 配置兼容 OpenAI 或 Anthropic 格式的服务地址、模型和 API Key，用量由对应服务商结算。 |
+| **自己的 CLI** | 使用本机已安装并登录的 Codex、Claude Code 或 Kimi CLI，可用性与用量取决于对应服务商套餐。 |
 
-浏览器只会发送与当前任务相关的画布区域及其几何信息。服务器验证请求并交给选定的执行器，然后返回可移动的结构化草稿。当前模型推荐和费用示例请参阅[英文 README](../../README.md#recommended-model-configurations)。
+在本机使用托管模型只需登录 Cloud，无需关联设备或另填 Credits API Key。Cloud MCP 可直接访问已启用的云端画布。通过 Cloud 访问电脑上托管的画布时，需要关联设备在线并具备相应中继支持。
 
-## 安全部署
+自有 API 和 CLI 连接不消耗 PenEcho 积分。使用自己的连接在本地工作，无需 Cloud 账号。AI 功能需要访问所选服务；本地运行 PenEcho 不代表远程模型可以离线使用。
 
-- PenEcho 每次启动时，首个浏览器必须设置一个实例共用的 6 位安全码，或明确确认风险后保持局域网开放。安全码只以加盐哈希保存在进程内存中，重启即清除，不影响画布文件和设置；连续输错会触发频率限制。它适合可信局域网的日常防护，不能替代公网级身份验证。
-- **Kimi CLI、Codex CLI 和 Claude CLI：** 仅应在本机或可信局域网内使用。有效请求会启动本地 CLI 进程，因此不要将这些模式直接暴露在公网中。
-- **API 模式：** 选择 6 位安全码后，浏览器访问和 AI 请求都需要先解锁；如果操作者明确选择不设置安全码，则会保留原先不限制远程 API 请求的行为。如需提供公网访问，请将 PenEcho 部署在具备 HTTPS、更强身份验证、频率限制和请求大小限制的反向代理之后。
-- 不要公开配置文件、API Key、请求记录、日志或包含隐私内容的画布图片。
+## 模型与效果
 
-## 参与开发
+以下推荐基于 PenEcho 实际画布任务的实测，在回答质量与延迟之间取得平衡；实际响应时间会随服务商、画布复杂度和推理行为变化。
 
-提交改动前请运行：
+| 模型 | 推理强度 | 说明 | 推荐用途 |
+| --- | --- | --- | --- |
+| Claude Opus 4.8 / 5.0 (`claude-opus-4-8` / `claude-opus-5-0`) | `medium` | 质量强，延迟更均衡 | 日常画布任务 |
+| Claude Opus 4.8 / 5.0 (`claude-opus-4-8` / `claude-opus-5-0`) | `high` | 推理质量更高，等待更长且波动更大 | 复杂手写、数学、图表或布局 |
+| Fable 5 (`claude-fable-5` 或 `fable`) | `medium` | 响应时间通常约为 `gpt-5.6-sol` 在 `xhigh` 下的一半 | 快速、高质量的通用任务 |
+| [Kimi K3](https://platform.kimi.ai?aff=penecho) (`kimi-k3`) | `medium` | 质量很好，`medium` 保持实用的平衡 | Kimi 推荐默认配置 |
+| `gpt-5.6-terra` | `low` 至 `high` | 质量与响应速度表现出色 | 灵活兼顾质量与延迟 |
+| `gpt-5.6-luna` | `xhigh` | 画布效果很好，速度快 | 质量优先，同时兼顾响应 |
+| `gpt-5.6-sol` | `high` | 满足多数请求，比 `xhigh` 响应更快 | 重视响应速度时的默认配置 |
+| `gpt-5.6-sol` | `xhigh` | 质量很好，但更慢且波动更大 | 高难度画布任务 |
+| `deepseek-v4-flash-vision-exp` | `medium` | 良好 | 通过 DeepSeek API 完成视觉任务 |
+| `glm-5.3-flash` | `medium` | 良好 | 通过 GLM Anthropic 兼容 API 快速完成任务 |
 
-```bash
-npm run check
-```
+## 社区与许可
 
-实现细节请参阅[架构说明](../architecture.md)，贡献流程请参阅 [CONTRIBUTING.md](../../CONTRIBUTING.md)。问题和使用案例可以发布到 [Discord](https://discord.gg/3jrPJ3mXdX) 或 [GitHub Discussions](https://github.com/penecho/penecho/discussions)，可复现的问题请提交到 [GitHub Issues](https://github.com/penecho/penecho/issues)。
+参与贡献请阅读 [CONTRIBUTING.md](../../CONTRIBUTING.md)，提交 PR 前运行 `npm run check`。欢迎在 [Issues](https://github.com/penecho/penecho/issues) 报告问题、在 [Discussions](https://github.com/penecho/penecho/discussions) 交流，或加入 [Discord](https://discord.gg/3jrPJ3mXdX)。
 
-## 许可证与商业使用
+采用 [AGPL-3.0-only](../../LICENSE) 许可，同时提供[商业许可](../../COMMERCIAL-LICENSE.md)。另见[商标政策](../../TRADEMARKS.md)和[贡献者协议](../../CONTRIBUTOR-LICENSE-AGREEMENT.md)。
 
-PenEcho 采用 [GNU AGPL v3.0 only](../../LICENSE) 开源许可证，允许商业使用。如果你修改 PenEcho 并通过网络向用户提供该版本，则必须按照 AGPL 的要求向这些用户提供对应的源代码。无法满足 AGPL 要求的专有产品或托管服务可以选择单独的[商业许可证](../../COMMERCIAL-LICENSE.md)。PenEcho 的名称和标志另受[商标政策](../../TRADEMARKS.md)约束。
+## 致谢
+
+感谢 tt-a1i 的 [Archify](https://github.com/tt-a1i/archify) 项目。PenEcho 的专业图表渲染器使用了该项目经适配的 SVG 与几何辅助代码，并保留完整的 [MIT 许可及版权声明](../../src/architecture/vendor/archify/LICENSE)。第三方署名详见 [NOTICE](../../NOTICE)。
+
+## Star 历史
+
+<p align="center">
+  <a href="https://www.star-history.com/?repos=penecho%2Fpenecho&amp;type=date&amp;legend=top-left">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=penecho/penecho&amp;type=date&amp;theme=dark&amp;legend=top-left">
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=penecho/penecho&amp;type=date&amp;legend=top-left">
+      <img src="https://api.star-history.com/chart?repos=penecho/penecho&amp;type=date&amp;legend=top-left" alt="PenEcho GitHub Star 增长历史图" width="800">
+    </picture>
+  </a>
+</p>

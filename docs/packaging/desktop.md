@@ -1,6 +1,6 @@
 # PenEcho desktop packaging
 
-This directory is a self-contained desktop-packaging snapshot of PenEcho 0.9.0. It keeps the existing browser canvas and CLI while adding an Electron shell for macOS and Windows.
+This directory contains PenEcho's Electron packaging for macOS and Windows. It keeps the existing browser canvas and CLI while adding a native desktop shell.
 
 End users do **not** need Node.js or Python. Electron bundles its own Chromium and Node.js runtime. API mode is the recommended beginner path. Codex CLI and Claude Code can also be installed from the setup page without opening a terminal.
 
@@ -25,7 +25,7 @@ The desktop service defaults to `127.0.0.1`. LAN listening is available only thr
 
 ## Local development and packaging
 
-Packaging requires Node.js 22.12 or newer on the build machine only.
+Packaging requires Node.js 22.19 or newer on the build machine only.
 
 ```bash
 npm ci
@@ -54,7 +54,7 @@ Windows installers cannot be created reliably on this Mac without Wine/Mono and 
 
 ## Icons
 
-The icon master is the same `public/penecho-mark.png` used by the website. Generate all platform assets with:
+The latest owner-supplied transparent attachment is `build/brand/penecho-logo-original.png`; `scripts/prepare-brand-logo.js` validates its PNG alpha channel and copies it byte-for-byte to the desktop/README master `build/brand/penecho-logo.png`, with explicit full-logo and symbol-only crop bounds in `build/brand/penecho-logo.json`. Generate all derived assets with:
 
 ```bash
 npm run icons
@@ -62,36 +62,64 @@ npm run icons
 
 Generated production assets:
 
-- `build/icons/penecho-1024.png`
+- `public/penecho-readme-header.webp` and `public/penecho-readme-header-dark.webp` (transparent, lossless, 840 px wide; displayed at 280 px using automatic light/dark selection in every README)
+- `public/penecho-favicon.png` (256 px symbol on a white rounded tile with transparent outer corners for Canvas browser tabs)
+- `build/icons/penecho-desktop-1024.png`
 - `build/icons/penecho.png`
 - `build/icons/penecho.icns`
 - `build/icons/penecho.ico`
+- `build/icons/penecho-install.gif`
 
-The website brand icon is applied to the app bundle, Dock/taskbar executable, DMG and Windows setup executable.
+Application icons use only the supplied rounded-square symbol, preserving its pink/orange/magenta gradient and black circular dot. macOS places it on the existing white rounded app tile used by the Dock and DMG; Windows uses a transparent background for the executable, taskbar and Setup icon. Squirrel's `penecho-install.gif` uses the complete stacked logo, including its original PenEcho lettering, and three loading dots. All lettering comes from the checked-in artwork rather than build-host fonts.
+
+Both desktop platforms open the Canvas directly, without a separate startup logo window. Windows retains the existing Squirrel first-run gate before showing the Canvas. The update window uses the same full-logo WebP.
+
+The source has intentionally been separated from web/mobile branding. `public/penecho-mark.png`, the old `public/penecho-readme-header.png`, and the mobile source `build/icons/penecho-1024.png` are retained as explicitly requested by the owner. `npm run icons` no longer overwrites that mobile source. See `docs/branding-audit.md` for the remaining surfaces.
 
 ## Signing and notarization
 
 Unsigned builds are suitable only for local testing. Beginner-facing releases should always be signed.
 
-macOS workflow secrets:
+The macOS jobs use the protected GitHub Environment named `macos-signing`. That environment requires approval from the repository owner and is restricted to `v*` tags. Its secret values are never stored in source or exposed to repository visitors.
+
+Required `macos-signing` environment secrets:
 
 - `MAC_CERTIFICATE_P12_BASE64`
 - `MAC_CERTIFICATE_PASSWORD`
 - `MAC_CODESIGN_IDENTITY`
-- `APPLE_ID`
-- `APPLE_APP_SPECIFIC_PASSWORD`
-- `APPLE_TEAM_ID`
+- `APPLE_API_KEY_P8_BASE64`
+- `APPLE_API_KEY_ID`
+- `APPLE_API_ISSUER`
 
-Windows workflow secrets for a PFX-based signing service:
+The workflow restores both credentials only inside the temporary GitHub-hosted runner. It signs the complete app with Developer ID, submits the app and DMG to Apple's notary service, staples the tickets, and verifies the result with `codesign`, Gatekeeper (`spctl`), and `stapler` before uploading artifacts. A missing credential fails the macOS jobs instead of silently producing an ad-hoc-signed release.
+
+The Windows job uses the GitHub Environment named `windows-signing`. Until a signing identity is configured it deliberately produces an unsigned installer and writes a warning to the build log. Adding a complete signing configuration switches the same workflow to signed output; a partial configuration fails instead of silently falling back to unsigned output.
+
+Preferred Azure Artifact Signing environment variables (no certificate private key is stored in GitHub):
+
+- `AZURE_ARTIFACT_SIGNING_ENDPOINT`
+- `AZURE_ARTIFACT_SIGNING_ACCOUNT_NAME`
+- `AZURE_ARTIFACT_SIGNING_CERTIFICATE_PROFILE_NAME`
+- `AZURE_CLIENT_ID`
+- `AZURE_TENANT_ID`
+- `AZURE_SUBSCRIPTION_ID`
+
+Configure these as GitHub Environment variables after the public identity validation and certificate profile are complete. The Entra application or managed identity must trust the `windows-signing` GitHub Environment through OIDC and have the `Artifact Signing Certificate Profile Signer` role on the certificate profile. The workflow requests a short-lived GitHub OIDC token and uses Microsoft's `ArtifactSigning` PowerShell module; no Azure client secret or third-party GitHub Action is required. It signs the packaged application before Squirrel creates its package, then signs the final Setup executable and verifies both signatures. Enabling Azure signing later requires environment and Azure identity configuration only; it does not require another source change.
+
+PFX-based Authenticode remains an optional fallback using `windows-signing` environment secrets:
 
 - `WINDOWS_CERTIFICATE_PFX_BASE64`
 - `WINDOWS_CERTIFICATE_PASSWORD`
 
-Azure Artifact Signing can replace the PFX path later if the publisher account is eligible. Never commit certificates or credentials.
+The certificate must be a Windows-trusted code-signing certificate with its private key, not the Apple Developer ID certificate. Configure either Azure or PFX, never both. Signed modes use SHA-256 and a trusted timestamp, and the workflow verifies that both `PenEcho.exe` and `PenEcho-Setup-*.exe` have valid timestamped Authenticode signatures before artifacts are uploaded.
+
+The update download progress is shown only inside the PenEcho window. It is intentionally never mirrored onto the Windows taskbar icon.
+
+Never commit certificates or credentials.
 
 ## GitHub Releases
 
-Keep source, icon masters, Forge configuration and the workflow in the source branch. Do not commit DMG/EXE/ZIP files to Git. Release binaries belong in a version-specific GitHub Release such as `v0.9.0`.
+Keep source, icon masters, Forge configuration and the workflow in the source branch. Do not commit DMG/EXE/ZIP files to Git. Release binaries belong in a version-specific GitHub Release such as `v1.2.0`.
 
 The workflow can be run manually for private testing. When triggered by a `v*` tag, it creates a **draft** GitHub Release and uploads the installers. Test every installer before publishing the draft.
 
@@ -99,7 +127,7 @@ Packaged apps check for updates shortly after launch and every six hours. `Help 
 
 Only published GitHub Releases are offered. Drafts and prereleases are not installed as normal updates. The updater accepts only the exact asset name for the current platform and architecture, only downloads it from the `penecho/penecho` GitHub Release path over HTTPS, and checks GitHub's SHA-256 digest when it is available.
 
-Unsigned builds can update during the pre-signing release phase:
+Local unsigned builds can still exercise the update flow during development:
 
 - macOS downloads the matching ZIP, validates its PenEcho bundle ID and version, then replaces the installed `.app` after the running process exits. PenEcho must be installed in a user-writable location.
 - Windows downloads the matching Squirrel Setup executable and starts its silent installed-app upgrade path. Squirrel install/update events update the shortcut and exit without opening the canvas.
@@ -108,13 +136,17 @@ These paths intentionally do not invoke Electron's native `autoUpdater`, because
 
 Recommended public assets:
 
-- `PenEcho-0.9.0-mac-arm64.dmg`
-- `PenEcho-0.9.0-mac-x64.dmg`
-- `PenEcho-0.9.0-mac-arm64.zip`
-- `PenEcho-0.9.0-mac-x64.zip`
-- `PenEcho-Setup-0.9.0-win-x64.exe`
+- `PenEcho-1.2.0-mac-arm64.dmg`
+- `PenEcho-1.2.0-mac-x64.dmg`
+- `PenEcho-1.2.0-mac-arm64.zip`
+- `PenEcho-1.2.0-mac-x64.zip`
+- `PenEcho-Setup-1.2.0-win-x64.exe`
 - `RELEASES`
-- `penecho-0.9.0-full.nupkg`
+- `penecho-1.2.0-full.nupkg`
 - `SHA256SUMS-<platform>-<arch>.txt`
 
 The DMG and Setup executable are the visible installers. PenEcho uses the macOS ZIP and Windows Setup executable for in-app updates, so those assets must remain attached when the draft is published. `RELEASES` and `.nupkg` remain useful Squirrel release artifacts but are not downloaded by PenEcho's unsigned update path.
+
+### Cloud browser branding
+
+After generating icons in 071, synchronize `index.html,penecho-favicon.png` through Cloud's official `tools/sync-public-canvas.mjs --source=/path/to/penecho --only=index.html,penecho-favicon.png`, then copy Cloud's `public/canvas/penecho-favicon.png` to `public/media/brand-app-icon.png`. Verify the selective sync with `--check`. The older `public/media/brand-icon.png` remains the image used by the existing activity/public-message routes. Text-built site wordmarks and all other residual branding remain unchanged.

@@ -2,7 +2,6 @@
   const DIAGRAM_RUNTIME = (() => {
     const VERSION = "penecho-diagram-source-v1";
     const FORMATS = Object.freeze([
-      { id:"mermaid", label:"Mermaid", aliases:["mermaid"] },
       { id:"dot", label:"Graphviz DOT", aliases:["dot", "graphviz", "graphviz-dot", "graphviz dot"] },
       { id:"bpmn-xml", label:"BPMN XML", aliases:["bpmn", "bpmn-xml", "bpmn2", "bpmn-2.0-xml"] },
       { id:"vega-lite", label:"Vega-Lite JSON", aliases:["vega-lite", "vegalite", "vega-lite-json"] },
@@ -42,23 +41,6 @@
         '"':"&quot;",
         "'":"&#39;",
       })[character]);
-    }
-    function responsiveMermaidSource(value, width, height) {
-      const source = String(value || ""),
-        directive = /^(\s*(?:(?:%%[^\n]*)\n\s*)*)(flowchart|graph)\s+(LR|RL|TB|TD|BT)\b/im.exec(source);
-      if (!directive || /%%\s*penecho:fixed-layout\b/i.test(source)) return { source, direction:"", responsive:false };
-      const connectors = source.match(/-->|---|-\.-?>|==>/g)?.length || 0,
-        responsive = /%%\s*penecho:responsive\b/i.test(source) || connectors > 10;
-      if (!responsive) return { source, direction:directive[3].toUpperCase(), responsive:false };
-      const original = directive[3].toUpperCase(),
-        horizontal = original === "RL" ? "RL" : "LR",
-        vertical = original === "BT" ? "BT" : "TB",
-        direction = width >= height * 1.35 ? horizontal : vertical,
-        innerDirection = direction === horizontal ? "TB" : "LR";
-      let responsiveDiagram = source.replace(directive[0], `${directive[1]}${directive[2]} ${direction}`);
-      if (/%%\s*penecho:responsive\b/i.test(source))
-        responsiveDiagram = responsiveDiagram.replace(/^(\s*direction\s+)(LR|RL|TB|TD|BT)\b/gim, `$1${innerDirection}`);
-      return { source:responsiveDiagram, direction, responsive:true };
     }
     function responsiveDotSource(value, width, height) {
       const source = String(value || ""),
@@ -169,7 +151,26 @@
         || spec.config && typeof spec.config === "object" && Object.prototype.hasOwnProperty.call(spec.config, "background");
       return hasBackground ? spec : { ...spec, background:"transparent" };
     }
-    function frameRuntime(config, responsiveMermaidSource, responsiveDotSource, vegaLiteSpecWithDefaultBackground) {
+    // Saved Mermaid widgets keep their renderer, independently of the formats
+    // offered for new diagrams. This function is embedded only in legacy frames.
+    async function renderLegacyMermaid(stage, source) {
+      const { default:mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs");
+      mermaid.initialize({ startOnLoad:false, securityLevel:"strict", theme:"base", themeVariables:{ background:"transparent", lineColor:"#64748b" } });
+      const rendered = await mermaid.render(`penecho-${Math.random().toString(36).slice(2)}`, source);
+      stage.innerHTML = rendered.svg;
+      rendered.bindFunctions?.(stage);
+      const svg = stage.querySelector("svg");
+      if (svg) {
+        svg.removeAttribute("width");
+        svg.removeAttribute("height");
+        svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+        svg.style.width = "100%";
+        svg.style.height = "100%";
+        svg.style.maxWidth = "100%";
+        svg.style.maxHeight = "100%";
+      }
+    }
+    function frameRuntime(config, responsiveDotSource, vegaLiteSpecWithDefaultBackground, legacyRenderer) {
       const stage = document.querySelector("#diagram-stage"),
         status = document.querySelector("#diagram-status"),
         root = document.querySelector(".pd-root"),
@@ -215,42 +216,6 @@
         try { return JSON.parse(source); }
         catch { throw Error(`${format} source is not valid JSON`); }
       };
-      async function renderMermaid() {
-        const { default:mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs"),
-          initial = responsiveMermaidSource(source, stage.clientWidth, stage.clientHeight);
-        mermaid.initialize({
-          startOnLoad:false,
-          securityLevel:"strict",
-          theme:"base",
-          themeVariables:{ background:"transparent" },
-          ...(initial.responsive ? { flowchart:{ defaultRenderer:"elk" } } : {}),
-        });
-        let renderedDirection = "",
-          renderVersion = 0;
-        const paint = async () => {
-            const next = responsiveMermaidSource(source, stage.clientWidth, stage.clientHeight),
-              version = ++renderVersion;
-            if (next.direction && next.direction === renderedDirection && stage.querySelector("svg")) return;
-            const rendered = await mermaid.render(`penecho-${Math.random().toString(36).slice(2)}`, next.source);
-            if (version !== renderVersion) return;
-            stage.innerHTML = rendered.svg;
-            rendered.bindFunctions?.(stage);
-            const svg = stage.querySelector("svg");
-            if (svg) {
-              svg.removeAttribute("width");
-              svg.removeAttribute("height");
-              svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
-              svg.style.width = "100%";
-              svg.style.height = "100%";
-              svg.style.maxWidth = "100%";
-              svg.style.maxHeight = "100%";
-            }
-            renderedDirection = next.direction;
-            notify();
-          };
-        await paint();
-        resizeRender = () => void paint().catch(() => {});
-      }
       async function renderDot() {
         const { instance } = await import("https://cdn.jsdelivr.net/npm/@viz-js/viz@3.9.0/lib/viz-standalone.mjs"),
           viz = await instance(),
@@ -495,7 +460,7 @@
         resizeRender = () => { cy.resize(); cy.fit(undefined, 36); };
       }
       async function render() {
-        if (format === "mermaid") await renderMermaid();
+        if (format === "mermaid" && legacyRenderer) await legacyRenderer(stage, source);
         else if (format === "dot") await renderDot();
         else if (format === "bpmn-xml") await renderBpmn();
         else if (format === "vega-lite") await renderVegaLite();
@@ -526,7 +491,8 @@
       }
     }
     function documentFor({ sourceFormat, source, title, diagramKind }) {
-      const format = formatRecord(sourceFormat);
+      const legacyMermaid = String(sourceFormat).trim().toLowerCase() === "mermaid",
+        format = formatRecord(sourceFormat) || (legacyMermaid ? { id:"mermaid", label:"Mermaid" } : null);
       if (!format || typeof source !== "string" || !source.trim() || new TextEncoder().encode(source).length > 100 * 1024) return "";
       const config = {
         sourceFormat:format.id,
@@ -561,7 +527,7 @@
       <p id="diagram-status" class="pd-status">Rendering ${escapeHtml(format.label)}...</p>
     </section>
   </main>
-  <script type="module">(${frameRuntime.toString()})(${scriptValue(config)},${responsiveMermaidSource.toString()},${responsiveDotSource.toString()},${vegaLiteSpecWithDefaultBackground.toString()});</script>
+  <script type="module">(${frameRuntime.toString()})(${scriptValue(config)},${responsiveDotSource.toString()},${vegaLiteSpecWithDefaultBackground.toString()},${legacyMermaid ? renderLegacyMermaid.toString() : "null"});</script>
 </body>
 </html>`;
     }
@@ -572,7 +538,6 @@
       supports:(value) => Boolean(normalizeFormat(value)),
       formatRecord,
       copyLabel,
-      responsiveMermaidSource,
       responsiveDotSource,
       vegaLiteSpecWithDefaultBackground,
       documentFor,
